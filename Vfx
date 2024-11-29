@@ -1,0 +1,215 @@
+local function showNotification()
+    -- Send the notification
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Shit Ahh Goofy", -- Required
+        Text = "Made by Veux and someone helped more", -- Required
+        Icon = "rbxassetid://101783582750128" -- Optional
+    })
+    
+    -- Wait for 4 seconds
+    wait(4)
+    
+    -- You can optionally clear the notification after 4 seconds, but Roblox automatically removes it after a short time.
+    -- No explicit remove function is required, as it will disappear on its own after a short delay.
+end
+
+-- Call the function to show the notification
+showNotification()
+
+wait(1)
+
+local function showNotification()
+    -- Send the notification
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Loading Please Wait", -- Required
+        Text = "Detecting Paths...", -- Required
+        Icon = "rbxassetid://18140853634" -- Optional
+    })
+    
+    -- Wait for 4 seconds
+    wait(6)
+    
+    -- You can optionally clear the notification after 4 seconds, but Roblox automatically removes it after a short time.
+    -- No explicit remove function is required, as it will disappear on its own after a short delay.
+end
+
+-- Call the function to show the notification
+showNotification()
+
+wait(3) 
+
+-- Create the GUI
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local TitleBar = Instance.new("Frame")
+local TitleText = Instance.new("TextLabel")
+local ScrollingFrame = Instance.new("ScrollingFrame")
+local UIListLayout = Instance.new("UIListLayout")
+local ResizeButton = Instance.new("TextButton") -- Resize button for resizing the GUI
+local CloseIcon = Instance.new("ImageButton") -- Close icon button as ImageButton
+local VFXLoggerButton = Instance.new("TextButton") -- VFX Logger button
+local guiVisible = true
+
+-- Parent the GUI to CoreGui
+ScreenGui.Parent = game:GetService("CoreGui")
+ScreenGui.Name = "VFXLoggerGUI"
+
+-- Main Frame (Default size, centered)
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- White background
+MainFrame.BorderSizePixel = 1
+MainFrame.BorderColor3 = Color3.fromRGB(0, 0, 0) -- Black border
+MainFrame.Size = UDim2.new(0, 300, 0, 400) -- Default size
+MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0) -- Centered
+
+-- Title Bar
+TitleBar.Name = "TitleBar"
+TitleBar.Parent = MainFrame
+TitleBar.BackgroundColor3 = Color3.fromRGB(245, 245, 245) -- Slightly gray
+TitleBar.BorderSizePixel = 1
+TitleBar.BorderColor3 = Color3.fromRGB(0, 0, 0) -- Black border
+TitleBar.Size = UDim2.new(1, 0, 0, 40)
+
+-- Title Text
+TitleText.Name = "TitleText"
+TitleText.Parent = TitleBar
+TitleText.BackgroundTransparency = 1
+TitleText.Size = UDim2.new(1, 0, 1, 0)
+TitleText.Font = Enum.Font.GothamBold
+TitleText.Text = "VFX PATHS : VEUX HUB [V1]"
+TitleText.TextColor3 = Color3.fromRGB(0, 0, 0) -- Black text
+TitleText.TextSize = 16
+
+-- Scrolling Frame for Logs
+ScrollingFrame.Name = "ScrollingFrame"
+ScrollingFrame.Parent = MainFrame
+ScrollingFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- White background
+ScrollingFrame.BorderSizePixel = 1
+ScrollingFrame.BorderColor3 = Color3.fromRGB(0, 0, 0) -- Black border
+ScrollingFrame.Position = UDim2.new(0, 5, 0, 45)
+ScrollingFrame.Size = UDim2.new(1, -10, 1, -50)
+ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+ScrollingFrame.ScrollBarThickness = 5
+
+-- Layout inside scrolling frame
+UIListLayout.Parent = ScrollingFrame
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Padding = UDim.new(0, 5)
+
+-- Resize Button (For resizing the GUI)
+ResizeButton.Name = "ResizeButton"
+ResizeButton.Parent = MainFrame
+ResizeButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- White button
+ResizeButton.TextColor3 = Color3.fromRGB(0, 0, 0) -- Black text
+ResizeButton.Size = UDim2.new(0, 40, 0, 40)
+ResizeButton.Position = UDim2.new(1, -45, 0, -1) -- Moved a little bit higher
+ResizeButton.Text = "➡" -- Resize symbol
+ResizeButton.Font = Enum.Font.GothamBold
+ResizeButton.TextSize = 14
+
+-- Close Icon Button (For closing the GUI)
+CloseIcon.Name = "CloseIcon"
+CloseIcon.Parent = ScreenGui
+CloseIcon.BackgroundTransparency = 1 -- Make background transparent
+CloseIcon.Size = UDim2.new(0, 40, 0, 40) -- 40x40 icon size
+CloseIcon.Position = UDim2.new(0, 10, 0.5, 0) -- Positioned on the left side, vertically centered
+CloseIcon.Image = "rbxassetid://118787860753936" -- Set the image to the provided asset ID
+CloseIcon.ImageColor3 = Color3.fromRGB(255, 255, 255) -- Set image color to white
+
+-- Make the CloseIcon draggable
+local dragging = false
+local dragInput, dragStart, startPos
+
+CloseIcon.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = CloseIcon.Position
+    end
+end)
+
+CloseIcon.InputChanged:Connect(function(input)
+    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        local delta = input.Position - dragStart
+        CloseIcon.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+
+CloseIcon.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = false
+    end
+end)
+
+-- Toggle visibility of the GUI when clicking the close icon
+CloseIcon.MouseButton1Click:Connect(function()
+    guiVisible = not guiVisible
+    MainFrame.Visible = guiVisible
+end)
+
+-- Toggle for Resize Button to make GUI bigger or smaller
+ResizeButton.MouseButton1Click:Connect(function()
+    if MainFrame.Size == UDim2.new(0, 300, 0, 400) then
+        MainFrame.Size = UDim2.new(0, 600, 0, 400) -- Increase size to make it bigger
+    else
+        MainFrame.Size = UDim2.new(0, 300, 0, 400) -- Revert to the original size
+    end
+end)
+
+-- Function to log VFX paths
+local function logVFXPath(path)
+    -- Prevent duplicate entries
+    if not ScrollingFrame:FindFirstChild(path) then
+        local Button = Instance.new("TextButton")
+        Button.Name = path
+        Button.Parent = ScrollingFrame
+        Button.BackgroundColor3 = Color3.fromRGB(245, 245, 245) -- Light gray button
+        Button.BorderColor3 = Color3.fromRGB(0, 0, 0) -- Black border
+        Button.Size = UDim2.new(1, -10, 0, 40)
+        Button.Font = Enum.Font.GothamBold
+        Button.Text = "game." .. path
+        Button.TextColor3 = Color3.fromRGB(0, 0, 0) -- Black text
+        Button.TextSize = 14
+
+        -- Copy Path on Click
+        Button.MouseButton1Click:Connect(function()
+            setclipboard("game." .. path)
+        end)
+
+        -- Adjust Canvas Size
+        ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y + 10)
+    end
+end
+
+-- Detect and Log VFX Paths
+local function detectVFX()
+    for _, v in ipairs(game:GetDescendants()) do
+        if v:IsA("Attachment") and v:FindFirstChildOfClass("ParticleEmitter") then
+            local success, relativePath = pcall(function()
+                return v:GetFullName()
+            end)
+
+            if success then
+                logVFXPath(relativePath)
+            end
+        end
+    end
+end
+
+-- Initial Detection
+detectVFX()
+
+-- Listen for New Instances
+game.DescendantAdded:Connect(function(instance)
+    if instance:IsA("Attachment") and instance:FindFirstChildOfClass("ParticleEmitter") then
+        local success, relativePath = pcall(function()
+            return instance:GetFullName()
+        end)
+
+        if success then
+            logVFXPath(relativePath)
+        end
+    end
+end)
